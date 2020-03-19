@@ -21,10 +21,8 @@ export const Search: React.FC<SearchProps> = props => {
             fullWidth
             onKeyUp={(e: any) => {
                 const { value } = e.target
-                // if (value.length > 2 || value.length === 0) {
-                    if (timeout != null) clearTimeout(timeout)
-                    timeout = setTimeout(() => handleSearchStringChange(value), 300)
-                // }
+                if (timeout != null) clearTimeout(timeout)
+                timeout = setTimeout(() => handleSearchStringChange(value), 300)
             }}
         />
     )
