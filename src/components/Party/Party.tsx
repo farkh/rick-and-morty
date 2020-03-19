@@ -8,14 +8,17 @@ import PartyItem from './PartyItem'
 import { Character, CharacterType } from '../Characters/CharacterItem'
 
 interface PartyProps {
+    // Если добавится Саммер (например) - не придется новый prop добавлять, просто новую карточку и тип добавить
     characters: Character[]
 }
 
+export const getCharacter = ({ characters, type }: { characters: Character[], type: CharacterType }): Character =>
+    characters.filter(character => character.name.toLowerCase().includes(type.toLowerCase()))?.[0]
+
 const Party: React.SFC<PartyProps> = props => {
     const { characters } = props
-    // Если добавится Саммер (например) - не придется новый prop добавлять, просто новую карточку и тип добавить
-    const rick = characters.filter(character => character.name.toLowerCase().includes(CharacterType.Rick.toLowerCase()))?.[0]
-    const morty = characters.filter(character => character.name.toLowerCase().includes(CharacterType.Morty.toLowerCase()))?.[0]
+    const rick = getCharacter({ characters, type: CharacterType.Rick })
+    const morty = getCharacter({ characters, type: CharacterType.Morty })
 
     return (
         <Grid item xs={12} container justify="center">
