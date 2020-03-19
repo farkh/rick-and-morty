@@ -22,6 +22,29 @@ const GET_CHARACTERS = gql`
     }
 `
 
+export const getUniqueByTypeCharacters = ({ characters, item, type }: {
+  characters: Character[],
+  item: Character,
+  type: CharacterType,
+}): Character[] =>
+  [
+    ...characters.filter(character => !character.name.toLowerCase().includes(type.toLowerCase())),
+    item,
+  ]
+
+export const getPartyParticipants = ({ participants, newParticipant }: {
+  participants: Character[],
+  newParticipant: Character,
+}): Character[] => {
+  const isMorty = newParticipant.name.toLowerCase().includes(CharacterType.Morty.toLowerCase())
+  const isRick = newParticipant.name.toLowerCase().includes(CharacterType.Rick.toLowerCase())
+
+  if (isMorty) return getUniqueByTypeCharacters({ characters: participants, item: newParticipant, type: CharacterType.Morty })
+  if (isRick) return getUniqueByTypeCharacters({ characters: participants, item: newParticipant, type: CharacterType.Rick })
+
+  return participants
+}
+
 export const PartyApp: React.FC = () => {
     const [searchString, setSearchString] = useState<string>('')
     const [removedCharacters, setRemovedCharacters] = useState<string[]>([])
@@ -31,22 +54,8 @@ export const PartyApp: React.FC = () => {
       !removedCharacters.includes(character.id)) || []
 
     const handleCharacterClick = (item: Character): void => {
-      const isMorty = item.name.toLowerCase().includes(CharacterType.Morty.toLowerCase())
-      const isRick = item.name.toLowerCase().includes(CharacterType.Rick.toLowerCase())
-
-      if (isMorty) {
-        setPartyParticipants([
-          ...partyParticipants.filter(participant => !participant.name.toLowerCase().includes(CharacterType.Morty.toLowerCase())),
-          item,
-        ])
-      }
-
-      if (isRick) {
-        setPartyParticipants([
-          ...partyParticipants.filter(participant => !participant.name.toLowerCase().includes(CharacterType.Rick.toLowerCase())),
-          item,
-        ])
-      }
+      const newParticipants = getPartyParticipants({ participants: partyParticipants, newParticipant: item })
+      setPartyParticipants(newParticipants)
     }
 
     return (
