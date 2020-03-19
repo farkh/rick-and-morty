@@ -1,4 +1,4 @@
-Rick & Morty Party 🎉
+# Rick & Morty Party 🎉
 
 ## Scripts
 
